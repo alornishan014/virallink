@@ -1,4 +1,6 @@
-import { VideoJsonLd } from 'next-seo'
+'use client'
+
+import Head from 'next/head'
 
 interface VideoStructuredDataProps {
   videos: Array<{
@@ -11,23 +13,32 @@ interface VideoStructuredDataProps {
 }
 
 export function VideoStructuredData({ videos }: VideoStructuredDataProps) {
-  const videoData = videos.map(video => ({
-    name: video.title,
-    description: `Watch ${video.title} on Viral Link - Your gateway to the best videos on the internet`,
-    thumbnailUrl: video.thumbnail || `${process.env.NEXT_PUBLIC_SITE_URL}/logo.png`,
-    uploadDate: new Date(video.createdAt).toISOString(),
-    contentUrl: video.url,
-    embedUrl: video.url,
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://virallink.com'
+  
+  const structuredData = videos.map(video => ({
+    "@context": "https://schema.org",
+    "@type": "VideoObject",
+    "name": video.title,
+    "description": `Watch ${video.title} on Viral Link - Your gateway to the best videos on the internet`,
+    "thumbnailUrl": video.thumbnail || `${siteUrl}/logo.png`,
+    "uploadDate": new Date(video.createdAt).toISOString(),
+    "contentUrl": video.url,
+    "embedUrl": video.url,
+    "publisher": {
+      "@type": "Organization",
+      "name": "Viral Link",
+      "logo": {
+        "@type": "ImageObject",
+        "url": `${siteUrl}/logo.png`
+      }
+    }
   }))
 
   return (
-    <>
-      {videoData.map((video, index) => (
-        <VideoJsonLd
-          key={`${video.name}-${index}`}
-          {...video}
-        />
-      ))}
-    </>
+    <Head>
+      <script type="application/ld+json">
+        {JSON.stringify(structuredData, null, 2)}
+      </script>
+    </Head>
   )
 }
