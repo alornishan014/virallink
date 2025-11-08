@@ -5,8 +5,10 @@ const nextConfig: NextConfig = {
   typescript: {
     ignoreBuildErrors: true,
   },
-  // 禁用 Next.js 热重载，由 nodemon 处理重编译
-  reactStrictMode: false,
+  // নেটলিফাই এর জন্য স্ট্যাটিক এক্সপোর্ট সেটিংস
+  output: 'export',
+  trailingSlash: true,
+  // নেটলিফাই এর জন্য ইমেজ ডোমেইন কনফিগারেশন
   images: {
     domains: [
       'media.istockphoto.com',
@@ -16,18 +18,19 @@ const nextConfig: NextConfig = {
       'vimeo.com',
       'i.ytimg.com'
     ],
+    unoptimized: true, // স্ট্যাটিক এক্সপোর্ট এর জন্য
   },
-  webpack: (config, { dev }) => {
-    if (dev) {
-      // 禁用 webpack 的热模块替换
-      config.watchOptions = {
-        ignored: ['**/*'], // 忽略所有文件变化
-      };
-    }
-    return config;
+  // নেটলিফাই এর জন্য রিওয়াইট কনফিগারেশন
+  rewrites: async () => {
+    return [
+      {
+        source: '/api/:path*',
+        destination: '/api/:path*',
+      },
+    ];
   },
   eslint: {
-    // 构建时忽略ESLint错误
+    // বিল্ড এর সময় ESLint এরর ইগনোর করুন
     ignoreDuringBuilds: true,
   },
 };
