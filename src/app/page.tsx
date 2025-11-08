@@ -9,6 +9,7 @@ import Link from 'next/link'
 import { PageSEO } from '@/components/seo'
 import { VideoStructuredData } from '@/components/video-structured-data'
 import { HeaderAd, InContentAd, FooterAd } from '@/components/adsense'
+import { VisitorTracker } from '@/components/visitor-tracker'
 
 interface Video {
   id: string
@@ -67,6 +68,7 @@ export default function HomePage() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-purple-50 via-pink-50 to-blue-50">
+      <VisitorTracker path="/" />
       <PageSEO 
         title="Viral Link - Watch Amazing Videos from Around the Web"
         description="Discover and watch the best videos from YouTube, Vimeo, and Dailymotion all in one place. Viral Link brings you the most trending and entertaining content."

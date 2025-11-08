@@ -18,10 +18,17 @@ import {
   BarChart3,
   ArrowLeft,
   CheckCircle,
-  AlertCircle
+  AlertCircle,
+  Users,
+  Eye,
+  TrendingUp,
+  Calendar,
+  Activity,
+  Globe
 } from 'lucide-react'
 import Link from 'next/link'
 import { generateThumbnailUrl, getVideoPlatform, fetchVideoThumbnail } from '@/lib/video-utils'
+import { VisitorTracker } from '@/components/visitor-tracker'
 
 interface Video {
   id: string
@@ -31,20 +38,57 @@ interface Video {
   createdAt: string
 }
 
+interface Analytics {
+  dailyStats: Array<{
+    date: string
+    visits: number
+    pageViews: number
+    uniqueVisitors: number
+  }>
+  totalVisitors: number
+  uniqueVisitors: number
+  popularPages: Array<{
+    path: string
+    _count: {
+      path: number
+    }
+  }>
+  todayStats: number
+  realTimeVisitors: number
+  period: number
+}
+
 export default function AdminDashboard() {
   const [videos, setVideos] = useState<Video[]>([])
+  const [analytics, setAnalytics] = useState<Analytics | null>(null)
   const [loading, setLoading] = useState(true)
+  const [analyticsLoading, setAnalyticsLoading] = useState(true)
   const [error, setError] = useState('')
   const [success, setSuccess] = useState('')
   const [showAddForm, setShowAddForm] = useState(false)
   const [newVideo, setNewVideo] = useState({ title: '', url: '', thumbnail: '' })
   const [adding, setAdding] = useState(false)
+  const [activeTab, setActiveTab] = useState<'videos' | 'analytics'>('videos')
   const router = useRouter()
 
   useEffect(() => {
     checkAuth()
     fetchVideos()
+    fetchAnalytics()
   }, [])
+
+  const fetchAnalytics = async () => {
+    try {
+      setAnalyticsLoading(true)
+      const response = await fetch('/api/analytics?days=30')
+      const data = await response.json()
+      setAnalytics(data)
+    } catch (err) {
+      console.error('Failed to fetch analytics:', err)
+    } finally {
+      setAnalyticsLoading(false)
+    }
+  }
 
   const checkAuth = () => {
     const token = localStorage.getItem('adminToken')
@@ -131,6 +175,7 @@ export default function AdminDashboard() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-purple-50 via-pink-50 to-blue-50">
+      <VisitorTracker path="/admin/dashboard" />
       {/* Header */}
       <header className="bg-white/80 backdrop-blur-md border-b border-purple-100 sticky top-0 z-50">
         <div className="container mx-auto px-4 py-4">
@@ -163,7 +208,7 @@ export default function AdminDashboard() {
 
       <div className="container mx-auto px-4 py-8">
         {/* Stats Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
           <Card>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-sm font-medium">Total Videos</CardTitle>
@@ -179,32 +224,79 @@ export default function AdminDashboard() {
           
           <Card>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">Recent Additions</CardTitle>
-              <Plus className="h-4 w-4 text-muted-foreground" />
+              <CardTitle className="text-sm font-medium">Total Visitors</CardTitle>
+              <Users className="h-4 w-4 text-muted-foreground" />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">
-                {videos.filter(v => new Date(v.createdAt) > new Date(Date.now() - 7 * 24 * 60 * 60 * 1000)).length}
-              </div>
+              <div className="text-2xl font-bold">{analytics?.totalVisitors || 0}</div>
               <p className="text-xs text-muted-foreground">
-                Added this week
+                Last 30 days
               </p>
             </CardContent>
           </Card>
           
           <Card>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">Platform Support</CardTitle>
-              <BarChart3 className="h-4 w-4 text-muted-foreground" />
+              <CardTitle className="text-sm font-medium">Today's Visits</CardTitle>
+              <Eye className="h-4 w-4 text-muted-foreground" />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">3</div>
+              <div className="text-2xl font-bold">{analytics?.todayStats || 0}</div>
               <p className="text-xs text-muted-foreground">
-                YouTube, Vimeo, Dailymotion
+                Visitors today
+              </p>
+            </CardContent>
+          </Card>
+          
+          <Card>
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+              <CardTitle className="text-sm font-medium">Real-time</CardTitle>
+              <Activity className="h-4 w-4 text-muted-foreground" />
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold">{analytics?.realTimeVisitors || 0}</div>
+              <p className="text-xs text-muted-foreground">
+                Last 30 minutes
               </p>
             </CardContent>
           </Card>
         </div>
+
+        {/* Tab Navigation */}
+        <div className="flex space-x-4 mb-6">
+          <Button
+            variant={activeTab === 'videos' ? 'default' : 'outline'}
+            onClick={() => setActiveTab('videos')}
+            className="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700"
+          >
+            <Video className="w-4 h-4 mr-2" />
+            Videos
+          </Button>
+          <Button
+            variant={activeTab === 'analytics' ? 'default' : 'outline'}
+            onClick={() => setActiveTab('analytics')}
+            className="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700"
+          >
+            <BarChart3 className="w-4 h-4 mr-2" />
+            Analytics
+          </Button>
+        </div>
+
+        {/* Tab Content */}
+        {activeTab === 'videos' ? (
+          <>
+            {/* Add Video Section */}
+            <div className="mb-8">
+              <div className="flex items-center justify-between mb-4">
+                <h2 className="text-2xl font-bold text-gray-800">Manage Videos</h2>
+                <Button 
+                  onClick={() => setShowAddForm(!showAddForm)}
+                  className="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700"
+                >
+                  <Plus className="w-4 h-4 mr-2" />
+                  Add New Video
+                </Button>
+              </div>
 
         {/* Alerts */}
         {error && (
@@ -375,6 +467,103 @@ export default function AdminDashboard() {
             )}
           </CardContent>
         </Card>
+        </>
+        ) : (
+          <>
+            {/* Analytics Section */}
+            <div className="space-y-6">
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                {/* Visitor Overview */}
+                <Card>
+                  <CardHeader>
+                    <CardTitle className="flex items-center">
+                      <Users className="w-5 h-5 mr-2" />
+                      Visitor Overview
+                    </CardTitle>
+                    <CardDescription>
+                      Last 30 days performance
+                    </CardDescription>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="space-y-4">
+                      <div className="flex justify-between items-center">
+                        <span className="text-sm text-gray-600">Total Visitors</span>
+                        <span className="font-semibold">{analytics?.totalVisitors || 0}</span>
+                      </div>
+                      <div className="flex justify-between items-center">
+                        <span className="text-sm text-gray-600">Unique Visitors</span>
+                        <span className="font-semibold">{analytics?.uniqueVisitors || 0}</span>
+                      </div>
+                      <div className="flex justify-between items-center">
+                        <span className="text-sm text-gray-600">Today's Visits</span>
+                        <span className="font-semibold">{analytics?.todayStats || 0}</span>
+                      </div>
+                      <div className="flex justify-between items-center">
+                        <span className="text-sm text-gray-600">Real-time Visitors</span>
+                        <span className="font-semibold">{analytics?.realTimeVisitors || 0}</span>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+
+                {/* Popular Pages */}
+                <Card>
+                  <CardHeader>
+                    <CardTitle className="flex items-center">
+                      <Globe className="w-5 h-5 mr-2" />
+                      Popular Pages
+                    </CardTitle>
+                    <CardDescription>
+                      Most visited pages
+                    </CardDescription>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="space-y-3">
+                      {analytics?.popularPages?.slice(0, 5).map((page, index) => (
+                        <div key={index} className="flex justify-between items-center">
+                          <span className="text-sm text-gray-600 truncate">{page.path}</span>
+                          <Badge variant="secondary">{page._count.path}</Badge>
+                        </div>
+                      )) || (
+                        <p className="text-sm text-gray-500">No page data available</p>
+                      )}
+                    </div>
+                  </CardContent>
+                </Card>
+              </div>
+
+              {/* Daily Stats Chart */}
+              <Card>
+                <CardHeader>
+                  <CardTitle className="flex items-center">
+                    <TrendingUp className="w-5 h-5 mr-2" />
+                    Daily Visitors (Last 30 Days)
+                  </CardTitle>
+                  <CardDescription>
+                    Visitor trends over time
+                  </CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <div className="space-y-2 max-h-64 overflow-y-auto">
+                    {analytics?.dailyStats?.slice(-30).map((stat, index) => (
+                      <div key={index} className="flex justify-between items-center p-2 bg-gray-50 rounded">
+                        <span className="text-sm">
+                          {new Date(stat.date).toLocaleDateString()}
+                        </span>
+                        <div className="flex space-x-4">
+                          <span className="text-sm font-medium">{stat.visits} visits</span>
+                          <span className="text-sm text-gray-600">{stat.uniqueVisitors} unique</span>
+                        </div>
+                      </div>
+                    )) || (
+                      <p className="text-sm text-gray-500">No daily stats available</p>
+                    )}
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
+          </>
+        )}
       </div>
     </div>
   )

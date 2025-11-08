@@ -22,6 +22,31 @@ model Video {
   updatedAt DateTime @updatedAt
 }
 
+model Visitor {
+  id        String   @id @default(cuid())
+  ip        String?
+  userAgent String?
+  path      String?
+  referrer  String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([createdAt])
+  @@index([path])
+}
+
+model DailyStats {
+  id        String   @id @default(cuid())
+  date      DateTime @unique
+  visits    Int      @default(0)
+  pageViews Int      @default(0)
+  uniqueVisitors Int  @default(0)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([date])
+}
+
 model User {
   id        String   @id @default(cuid())
   email     String   @unique

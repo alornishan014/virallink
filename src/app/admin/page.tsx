@@ -8,6 +8,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Alert, AlertDescription } from '@/components/ui/alert'
 import { Shield, Lock, ArrowLeft } from 'lucide-react'
 import Link from 'next/link'
+import { VisitorTracker } from '@/components/visitor-tracker'
 
 export default function AdminLogin() {
   const [password, setPassword] = useState('')
@@ -47,6 +48,7 @@ export default function AdminLogin() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-purple-50 via-pink-50 to-blue-50 flex items-center justify-center p-4">
+      <VisitorTracker path="/admin" />
       <div className="w-full max-w-md">
         {/* Back to Home */}
         <Link href="/" className="inline-flex items-center text-purple-600 hover:text-purple-700 mb-8">
