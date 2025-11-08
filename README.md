@@ -1,141 +1,176 @@
-# 🚀 Welcome to Z.ai Code Scaffold
+# Viral Link - Video Aggregation Platform
 
-A modern, production-ready web application scaffold powered by cutting-edge technologies, designed to accelerate your development with [Z.ai](https://chat.z.ai)'s AI-powered coding assistance.
+A modern, colorful video aggregation website that allows users to discover and watch videos from YouTube, Vimeo, and Dailymotion all in one place.
 
-## ✨ Technology Stack
+## Features
 
-This scaffold provides a robust foundation built with:
+- 🎥 **Video Aggregation**: Collect videos from multiple platforms (YouTube, Vimeo, Dailymotion)
+- 🎨 **Modern Design**: Colorful, responsive interface with gradient backgrounds
+- 📱 **Mobile Responsive**: Optimized for all devices with 1 column on mobile, 3 on desktop
+- 🔍 **Search Functionality**: Find videos easily with built-in search
+- 📄 **Pagination**: 9 videos per page with Next button navigation
+- 🔐 **Admin Dashboard**: Secure admin area for video management
+- 🖼️ **Auto Thumbnails**: Automatic thumbnail generation with fallbacks
+- 📊 **SEO Optimized**: Meta tags, structured data, sitemap, and robots.txt
+- 💰 **AdSense Ready**: Optimized for Google AdSense integration
+- 🚀 **Performance**: Built with Next.js 15, TypeScript, and Tailwind CSS
 
-### 🎯 Core Framework
-- **⚡ Next.js 15** - The React framework for production with App Router
-- **📘 TypeScript 5** - Type-safe JavaScript for better developer experience
-- **🎨 Tailwind CSS 4** - Utility-first CSS framework for rapid UI development
+## Tech Stack
 
-### 🧩 UI Components & Styling
-- **🧩 shadcn/ui** - High-quality, accessible components built on Radix UI
-- **🎯 Lucide React** - Beautiful & consistent icon library
-- **🌈 Framer Motion** - Production-ready motion library for React
-- **🎨 Next Themes** - Perfect dark mode in 2 lines of code
+- **Framework**: Next.js 15 with App Router
+- **Language**: TypeScript
+- **Styling**: Tailwind CSS
+- **Components**: shadcn/ui
+- **Database**: SQLite with Prisma ORM
+- **SEO**: next-seo
+- **Icons**: Lucide React
 
-### 📋 Forms & Validation
-- **🎣 React Hook Form** - Performant forms with easy validation
-- **✅ Zod** - TypeScript-first schema validation
+## Getting Started
 
-### 🔄 State Management & Data Fetching
-- **🐻 Zustand** - Simple, scalable state management
-- **🔄 TanStack Query** - Powerful data synchronization for React
-- **🌐 Axios** - Promise-based HTTP client
+### Prerequisites
 
-### 🗄️ Database & Backend
-- **🗄️ Prisma** - Next-generation Node.js and TypeScript ORM
-- **🔐 NextAuth.js** - Complete open-source authentication solution
+- Node.js 18+ 
+- npm or yarn
 
-### 🎨 Advanced UI Features
-- **📊 TanStack Table** - Headless UI for building tables and datagrids
-- **🖱️ DND Kit** - Modern drag and drop toolkit for React
-- **📊 Recharts** - Redefined chart library built with React and D3
-- **🖼️ Sharp** - High performance image processing
+### Installation
 
-### 🌍 Internationalization & Utilities
-- **🌍 Next Intl** - Internationalization library for Next.js
-- **📅 Date-fns** - Modern JavaScript date utility library
-- **🪝 ReactUse** - Collection of essential React hooks for modern development
-
-## 🎯 Why This Scaffold?
-
-- **🏎️ Fast Development** - Pre-configured tooling and best practices
-- **🎨 Beautiful UI** - Complete shadcn/ui component library with advanced interactions
-- **🔒 Type Safety** - Full TypeScript configuration with Zod validation
-- **📱 Responsive** - Mobile-first design principles with smooth animations
-- **🗄️ Database Ready** - Prisma ORM configured for rapid backend development
-- **🔐 Auth Included** - NextAuth.js for secure authentication flows
-- **📊 Data Visualization** - Charts, tables, and drag-and-drop functionality
-- **🌍 i18n Ready** - Multi-language support with Next Intl
-- **🚀 Production Ready** - Optimized build and deployment settings
-- **🤖 AI-Friendly** - Structured codebase perfect for AI assistance
-
-## 🚀 Quick Start
-
+1. Clone the repository:
 ```bash
-# Install dependencies
-npm install
-
-# Start development server
-npm run dev
-
-# Build for production
-npm run build
-
-# Start production server
-npm start
+git clone https://github.com/alornishan014/virallink.git
+cd virallink
 ```
 
-Open [http://localhost:3000](http://localhost:3000) to see your application running.
+2. Install dependencies:
+```bash
+npm install
+```
 
-## 🤖 Powered by Z.ai
+3. Set up environment variables:
+```bash
+cp .env.example .env
+```
 
-This scaffold is optimized for use with [Z.ai](https://chat.z.ai) - your AI assistant for:
+4. Set up the database:
+```bash
+npm run db:push
+```
 
-- **💻 Code Generation** - Generate components, pages, and features instantly
-- **🎨 UI Development** - Create beautiful interfaces with AI assistance  
-- **🔧 Bug Fixing** - Identify and resolve issues with intelligent suggestions
-- **📝 Documentation** - Auto-generate comprehensive documentation
-- **🚀 Optimization** - Performance improvements and best practices
+5. Start the development server:
+```bash
+npm run dev
+```
 
-Ready to build something amazing? Start chatting with Z.ai at [chat.z.ai](https://chat.z.ai) and experience the future of AI-powered development!
+6. Open [http://localhost:3000](http://localhost:3000) in your browser.
 
-## 📁 Project Structure
+## Admin Access
+
+- **URL**: `/admin`
+- **Password**: `Ra095213@#`
+
+## Project Structure
 
 ```
 src/
-├── app/                 # Next.js App Router pages
-├── components/          # Reusable React components
-│   └── ui/             # shadcn/ui components
-├── hooks/              # Custom React hooks
-└── lib/                # Utility functions and configurations
+├── app/
+│   ├── admin/
+│   │   ├── page.tsx          # Admin login
+│   │   └── dashboard/
+│   │       └── page.tsx      # Admin dashboard
+│   ├── api/
+│   │   ├── admin/
+│   │   │   └── login/
+│   │   │       └── route.ts  # Admin authentication
+│   │   └── videos/
+│   │       ├── route.ts      # Video CRUD operations
+│   │       └── [id]/
+│   │           └── route.ts   # Individual video operations
+│   ├── video/
+│   │   └── [id]/
+│   │       └── page.tsx      # Video player page
+│   ├── page.tsx             # Homepage
+│   ├── layout.tsx           # Root layout
+│   ├── sitemap.ts          # Sitemap generation
+│   └── robots.ts           # Robots.txt configuration
+├── components/
+│   ├── ui/                  # shadcn/ui components
+│   ├── video-card.tsx       # Video card component
+│   ├── adsense.tsx          # AdSense components
+│   ├── seo.tsx             # SEO components
+│   └── video-structured-data.tsx  # Structured data
+├── lib/
+│   ├── db.ts               # Database connection
+│   ├── utils.ts            # Utility functions
+│   ├── socket.ts           # Socket.io configuration
+│   └── video-utils.ts      # Video utility functions
+└── prisma/
+    └── schema.prisma       # Database schema
 ```
 
-## 🎨 Available Features & Components
+## API Endpoints
 
-This scaffold includes a comprehensive set of modern web development tools:
+### Videos
+- `GET /api/videos` - Get videos with pagination and search
+- `POST /api/videos` - Create new video
+- `GET /api/videos/[id]` - Get individual video
+- `DELETE /api/videos/[id]` - Delete video
 
-### 🧩 UI Components (shadcn/ui)
-- **Layout**: Card, Separator, Aspect Ratio, Resizable Panels
-- **Forms**: Input, Textarea, Select, Checkbox, Radio Group, Switch
-- **Feedback**: Alert, Toast (Sonner), Progress, Skeleton
-- **Navigation**: Breadcrumb, Menubar, Navigation Menu, Pagination
-- **Overlay**: Dialog, Sheet, Popover, Tooltip, Hover Card
-- **Data Display**: Badge, Avatar, Calendar
+### Admin
+- `POST /api/admin/login` - Admin authentication
 
-### 📊 Advanced Data Features
-- **Tables**: Powerful data tables with sorting, filtering, pagination (TanStack Table)
-- **Charts**: Beautiful visualizations with Recharts
-- **Forms**: Type-safe forms with React Hook Form + Zod validation
+## Environment Variables
 
-### 🎨 Interactive Features
-- **Animations**: Smooth micro-interactions with Framer Motion
-- **Drag & Drop**: Modern drag-and-drop functionality with DND Kit
-- **Theme Switching**: Built-in dark/light mode support
+```env
+DATABASE_URL="file:./dev.db"
+NEXT_PUBLIC_SITE_URL="https://yourdomain.com"
+```
 
-### 🔐 Backend Integration
-- **Authentication**: Ready-to-use auth flows with NextAuth.js
-- **Database**: Type-safe database operations with Prisma
-- **API Client**: HTTP requests with Axios + TanStack Query
-- **State Management**: Simple and scalable with Zustand
+## Deployment
 
-### 🌍 Production Features
-- **Internationalization**: Multi-language support with Next Intl
-- **Image Optimization**: Automatic image processing with Sharp
-- **Type Safety**: End-to-end TypeScript with Zod validation
-- **Essential Hooks**: 100+ useful React hooks with ReactUse for common patterns
+### Vercel (Recommended)
 
-## 🤝 Get Started with Z.ai
+1. Push your code to GitHub
+2. Connect your repository to Vercel
+3. Set up environment variables
+4. Deploy
 
-1. **Clone this scaffold** to jumpstart your project
-2. **Visit [chat.z.ai](https://chat.z.ai)** to access your AI coding assistant
-3. **Start building** with intelligent code generation and assistance
-4. **Deploy with confidence** using the production-ready setup
+### Other Platforms
 
----
+The project is compatible with any platform that supports Next.js applications.
 
-Built with ❤️ for the developer community. Supercharged by [Z.ai](https://chat.z.ai) 🚀
+## AdSense Integration
+
+The project is optimized for Google AdSense:
+
+1. Replace `ca-pub-XXXXXXXXXXXXXXXX` with your AdSense publisher ID
+2. Replace `XXXXXXXXXX` with your actual ad slot IDs
+3. Update ad placements as needed
+
+Ad placements include:
+- Header ads
+- In-content ads
+- Footer ads
+- Sidebar ads (on video pages)
+
+## SEO Features
+
+- **Meta Tags**: Comprehensive meta tags for all pages
+- **Structured Data**: Video structured data for better search visibility
+- **Sitemap**: Automatic sitemap generation
+- **Robots.txt**: Proper crawling instructions
+- **Social Media**: Open Graph and Twitter Card support
+
+## Contributing
+
+1. Fork the repository
+2. Create a feature branch
+3. Make your changes
+4. Test thoroughly
+5. Submit a pull request
+
+## License
+
+This project is licensed under the MIT License.
+
+## Support
+
+For support and questions, please open an issue in the GitHub repository.
